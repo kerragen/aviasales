@@ -7,6 +7,13 @@
   background-color: white;
   border-radius: 5px;
 
+  @media (max-width: 550px) {
+    width: 300px;
+    height: 220px;
+    
+    
+  }
+
   &__title {
     margin: 20px 20px 10px 20px;
     align-items: center;
@@ -22,6 +29,10 @@
     height: 40px;
     margin: 0;
     margin-left: 0px;
+
+    @media (max-width: 550px) {
+      width: 300px;
+    }
 
     @supports (-webkit-appearance: none) or (-moz-appearance: none) {
       input[type='checkbox'] {
@@ -41,9 +52,8 @@
         display: inline-block;
         vertical-align: middle;
         position: relative;
-        margin: 0;
-        margin-top: 10px;
-        margin-left: 20px;
+        margin: 5px 0 5px 20px;
+        
         cursor: pointer;
         border: 1px solid var(--bc, var(--border));
         background: var(--b, var(--background));
@@ -102,6 +112,7 @@
           line-height: 20px;
           display: inline-block;
           cursor: pointer;
+          margin-bottom: 10px;
           margin-left: 10px;
         }
       }
@@ -150,14 +161,14 @@
       }
     }
   }
+  
 
   &__item:hover {
     background-color: #f1fcff;
     cursor: pointer;
   }
 
-  &__text {
-    font-family: Open Sans;
+  &__label {
     font-size: 13px;
     font-weight: 400;
     line-height: 20px;

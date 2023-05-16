@@ -32,6 +32,21 @@ body {
 .main {
   display: flex;
   column-gap: 20px;
+
+  @media (max-width: 550px) {
+    flex-direction: column;
+    row-gap: 20px;
+
+    &__left {
+      align-self: center;
+    }
+  }
+
+  &__right {
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+  }
 }
 
 .loader {

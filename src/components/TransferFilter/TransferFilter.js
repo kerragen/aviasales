@@ -21,7 +21,7 @@ const TransferFilter = () => {
           onChange={changeAllCheckbox}
           checked={filter.allChecked}
         />
-        <label className={classes.filter__text} htmlFor="check-1">
+        <label className={classes.filter__label} htmlFor="check-1">
           Все
         </label>
       </div>
@@ -33,7 +33,7 @@ const TransferFilter = () => {
           onChange={() => changeChecked('noTransf')}
           checked={filter.noTransf}
         />
-        <label className={classes.filter__text} htmlFor="check-2">
+        <label className={classes.filter__label} htmlFor="check-2">
           Без пересадок
         </label>
       </div>
@@ -45,7 +45,7 @@ const TransferFilter = () => {
           onChange={() => changeChecked('transf1')}
           checked={filter.transf1}
         />
-        <label className={classes.filter__text} htmlFor="check-3">
+        <label className={classes.filter__label} htmlFor="check-3">
           1 пересадка
         </label>
       </div>
@@ -57,7 +57,7 @@ const TransferFilter = () => {
           onChange={() => changeChecked('transf2')}
           checked={filter.transf2}
         />
-        <label className={classes.filter__text} htmlFor="check-4">
+        <label className={classes.filter__label} htmlFor="check-4">
           2 пересадки
         </label>
       </div>
@@ -69,7 +69,7 @@ const TransferFilter = () => {
           onChange={() => changeChecked('transf3')}
           checked={filter.transf3}
         />
-        <label className={classes.filter__text} htmlFor="check-5">
+        <label className={classes.filter__label} htmlFor="check-5">
           3 пересадки
         </label>
       </div>
