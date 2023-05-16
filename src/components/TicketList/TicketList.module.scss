@@ -1,0 +1,21 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  width: 502px;
+
+  &__tickets {
+    margin-bottom: 20px;
+  }
+
+  &__button {
+    width: 502px;
+    height: 50px;
+    border: 0px;
+    border-radius: 5px;
+    color: white;
+    background-color: rgba(33, 150, 243, 1);
+    margin-bottom: 35px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+}
