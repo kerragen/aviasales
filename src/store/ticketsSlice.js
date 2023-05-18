@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
+const _api = 'https://aviasales-test-api.kata.academy'
+
 export const getSearchId = createAsyncThunk('ticket/getSearchId', async function () {
-  const res = await fetch('https://aviasales-test-api.kata.academy/search')
+  const res = await fetch(`${_api}/search`)
   const data = await res.json()
   return data
 })
@@ -11,17 +13,18 @@ export const getTickets = createAsyncThunk('tikets/getTickets', async function (
   let errorsCount = 0
   let count = 0
   while (!stop) {
-    const res = await fetch(`https://aviasales-test-api.kata.academy/tickets?searchId=${searchId}`)
+    const res = await fetch(`${_api}/tickets?searchId=${searchId}`)
+    console.log(res)
 
     if (!res.ok) {
       errorsCount += 1
-      if (errorsCount > 20) {
+      if (errorsCount > 20 || res.status === 400) {
         stop = true
         dispatch(changeStatus('exception'))
         setTimeout(() => dispatch(changeLoading(false)), 1000)
         throw new Error()
       }
-      if (res.status !== 500) {
+      if (res.status === 200) {
         dispatch(changeProgress(10))
       }
       continue

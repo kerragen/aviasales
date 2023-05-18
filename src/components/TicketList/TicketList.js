@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Alert } from 'antd'
 
+import { sortTickets, filterTickets } from '../../utils/sortAndFilter'
 import { changeNotFound, getSearchId, getTickets } from '../../store/ticketsSlice'
 import Ticket from '../Ticket/Ticket'
 
@@ -35,37 +36,10 @@ const TicketList = () => {
     dispatch(getTickets(searchId))
   }, [dispatch, searchId])
 
-  const typeTickets = (tickets, type) => {
-    const typeArray = [...tickets]
-    if (type === 'cheap') {
-      return typeArray.sort((a, b) => a.price - b.price)
-    } else if (type === 'fast') {
-      return typeArray.sort((a, b) => {
-        const first = a.segments[0].duration + a.segments[1].duration
-        const second = b.segments[0].duration + b.segments[1].duration
-        return first - second
-      })
-    }
-  }
+  const typeTickets = useMemo(() => sortTickets(tickets, typeValue), [tickets, typeValue])
+  const filteringTickets = useMemo(() => filterTickets(typeTickets, filter), [typeTickets, filter])
 
-  const filteringTickets = (tickets, filter) => {
-    let filterArray = [...tickets]
-    if (!filter.noTransf) {
-      filterArray = filterArray.filter((ticket) => ticket.segments[0].stops.length !== 0)
-    }
-    if (!filter.transf1) {
-      filterArray = filterArray.filter((ticket) => ticket.segments[0].stops.length !== 1)
-    }
-    if (!filter.transf2) {
-      filterArray = filterArray.filter((ticket) => ticket.segments[0].stops.length !== 2)
-    }
-    if (!filter.transf3) {
-      filterArray = filterArray.filter((ticket) => ticket.segments[0].stops.length !== 3)
-    }
-    return filterArray
-  }
-
-  const visibleItems = filteringTickets(typeTickets(tickets, typeValue), filter)
+  const visibleItems = filteringTickets.slice(0, visibleCount)
 
   useEffect(() => {
     dispatch(changeNotFound(false))
@@ -74,7 +48,7 @@ const TicketList = () => {
     }
   }, [dispatch, filter, visibleItems])
 
-  const els = visibleItems.slice(0, visibleCount).map((ticket) => {
+  const els = visibleItems.map((ticket) => {
     const first = ticket.segments[0]
     const second = ticket.segments[1]
 
