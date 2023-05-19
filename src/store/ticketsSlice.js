@@ -14,7 +14,6 @@ export const getTickets = createAsyncThunk('tikets/getTickets', async function (
   let count = 0
   while (!stop) {
     const res = await fetch(`${_api}/tickets?searchId=${searchId}`)
-    console.log(res)
 
     if (!res.ok) {
       errorsCount += 1
