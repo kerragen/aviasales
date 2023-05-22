@@ -10,39 +10,29 @@ export const getSearchId = createAsyncThunk('ticket/getSearchId', async function
 
 export const getTickets = createAsyncThunk('tickets/getTickets', async function (searchId, { dispatch }) {
   let stop = false
-  let errorsCount = 0
-  let count = 0
+
   while (!stop) {
     try {
       const res = await fetch(`${_api}/tickets?searchId=${searchId}`)
 
       if (res.status === 500) {
-        errorsCount += 1
-        if (errorsCount > 20) {
-          stop = true
-          dispatch(changeStatus('exception'))
-          setTimeout(() => dispatch(changeLoading(false)), 1000)
-          throw new Error()
-        }
-        if (res.status === 200) {
-          dispatch(changeProgress(10))
-        }
         continue
       }
 
-      count += 1
-      let data
-      try {
-        data = await res.json()
-      } catch (error) {
-        console.error('Error JSON:', error)
-        throw error
+      if (!res.ok) {
+        stop = true
+        dispatch(changeStatus('exception'))
+        setTimeout(() => dispatch(changeLoading(false)), 1000)
       }
+
+      const data = await res.json()
       dispatch(changeTickets(data.tickets))
-      if (count === 1) {
+
+      if (!stop) {
         dispatch(changeFirstLoading(false))
         dispatch(changeEndLoading(true))
       }
+
       dispatch(changeProgress(5))
       stop = data.stop
     } catch (error) {
