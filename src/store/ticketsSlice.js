@@ -8,36 +8,49 @@ export const getSearchId = createAsyncThunk('ticket/getSearchId', async function
   return data
 })
 
-export const getTickets = createAsyncThunk('tikets/getTickets', async function (searchId, { dispatch }) {
+export const getTickets = createAsyncThunk('tickets/getTickets', async function (searchId, { dispatch }) {
   let stop = false
   let errorsCount = 0
   let count = 0
   while (!stop) {
-    const res = await fetch(`${_api}/tickets?searchId=${searchId}`)
+    try {
+      const res = await fetch(`${_api}/tickets?searchId=${searchId}`)
 
-    if (!res.ok) {
-      errorsCount += 1
-      if (errorsCount > 20 || res.status === 400) {
-        stop = true
-        dispatch(changeStatus('exception'))
-        setTimeout(() => dispatch(changeLoading(false)), 1000)
-        throw new Error()
+      if (res.status === 500) {
+        errorsCount += 1
+        if (errorsCount > 20) {
+          stop = true
+          dispatch(changeStatus('exception'))
+          setTimeout(() => dispatch(changeLoading(false)), 1000)
+          throw new Error()
+        }
+        if (res.status === 200) {
+          dispatch(changeProgress(10))
+        }
+        continue
       }
-      if (res.status === 200) {
-        dispatch(changeProgress(10))
+
+      count += 1
+      let data
+      try {
+        data = await res.json()
+      } catch (error) {
+        console.error('Error JSON:', error)
+        throw error
       }
-      continue
+      dispatch(changeTickets(data.tickets))
+      if (count === 1) {
+        dispatch(changeFirstLoading(false))
+        dispatch(changeEndLoading(true))
+      }
+      dispatch(changeProgress(5))
+      stop = data.stop
+    } catch (error) {
+      console.error('Error:', error)
+      throw error
     }
-    count += 1
-    const data = await res.json()
-    dispatch(changeTickets(data.tickets))
-    if (count === 1) {
-      dispatch(changeFirstLoading(false))
-      dispatch(changeEndLoading(true))
-    }
-    dispatch(changeProgress(5))
-    stop = data.stop
   }
+
   setTimeout(() => dispatch(changeLoading(false)), 500)
 })
 
@@ -76,6 +89,9 @@ const ticketsSlice = createSlice({
     changeEndLoading(state, action) {
       state.endLoading = action.payload
     },
+    changeError(state, action) {
+      state.error = action.payload
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -112,6 +128,7 @@ export const {
   changeProgress,
   changeFirstLoading,
   changeEndLoading,
+  changeError,
 } = ticketsSlice.actions
 
 export default ticketsSlice.reducer
