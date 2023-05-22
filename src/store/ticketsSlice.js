@@ -89,9 +89,6 @@ const ticketsSlice = createSlice({
     changeEndLoading(state, action) {
       state.endLoading = action.payload
     },
-    changeError(state, action) {
-      state.error = action.payload
-    },
   },
   extraReducers: (builder) => {
     builder
